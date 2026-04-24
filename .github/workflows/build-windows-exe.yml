@@ -38,9 +38,17 @@ jobs:
         shell: bash
         run: pyinstaller --noconfirm --windowed --name MimaGuard run.py
 
-      - name: Upload EXE artifact
+      - name: Create distributable zip (includes all DLLs)
+        shell: bash
+        run: |
+          cd dist
+          powershell -Command "Compress-Archive -Path MimaGuard -DestinationPath MimaGuard-windows10plus-bundle.zip -Force"
+
+      - name: Upload full bundle artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MimaGuard-windows10plus-exe
-          path: dist/MimaGuard/MimaGuard.exe
+          name: MimaGuard-windows10plus-bundle
+          path: |
+            dist/MimaGuard/
+            dist/MimaGuard-windows10plus-bundle.zip
           if-no-files-found: error
